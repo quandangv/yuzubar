@@ -3,6 +3,7 @@ image: gcc
 build:
   stage: build
   before_script:
+    - pip install cmake
     - git clone https://github.com/quandangv/linked_nodes 
     - cd linked_nodes
     - ./build.sh -A
