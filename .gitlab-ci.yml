@@ -8,6 +8,7 @@ build:
     - git clone https://github.com/quandangv/linked_nodes 
     - cd linked_nodes
     - ./build.sh -A
+    - cd ..
   script:
     - make
     - make install
