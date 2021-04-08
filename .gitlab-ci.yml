@@ -1,4 +1,4 @@
-image: untested build
+image: gcc
 
 build:
   stage: build
