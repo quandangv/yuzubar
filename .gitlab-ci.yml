@@ -1,7 +1,8 @@
 image: untested build
 
 build:
-  stage: .pre
+  stage: build
+  before_script:
     - git clone https://github.com/quandangv/linked_nodes 
     - cd linked_nodes
     - ./build.sh -A
