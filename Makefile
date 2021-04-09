@@ -10,7 +10,7 @@ install_font:
 	@read -r -p "Install fonts used by the example? [Y/n]: " -n 1 p && echo
 	[[ "${p^^}" != "N" ]] && sudo cp GrenzeGotisch.ttf /usr/share/fonts/
 
-run: install_font build/yambar
+run: build/yambar
 	-pkill lemonbar
 	./build/yambar 'lemonbar -f "GrenzeGotisch-VariableFont_wght.ttf:style=smallcaps:size=40" -f "Grenze Gotisch:size=40:weight=bold" -f "Iosevka Nerd Font:size=40" -g +0+13 -a 40' &
 
