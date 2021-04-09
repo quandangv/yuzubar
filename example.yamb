@@ -1,13 +1,16 @@
-yambar: "%{O40}${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B- O40}"
-  sep: "%{B- O10}"
+yambar: "%{O40}${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B${bar-bg} O40}"
+  fg: #532
+  bg:$ color L+0.7 ${dep fg}
+  bar-bg: -
+  sep: "%{B${dep bar-bg} O10}"
 
+  warn_module.background.norm:$ dep bg
+  warn_module.foreground.norm:$ dep fg
   warn_module:H ${dep sep}${format} ${text}
     smooth_level:$i cache 5 ${smooth 0.3 ${map 1 30 ${dep level}}}
     background:$ gradient "0:${norm} 30:${warn}" ${dep smooth_level}
-      norm: #EDB
       warn: #B32
     foreground:$ gradient "0:${norm} 30:${warn}" ${dep smooth_level}
-      norm: #532
       warn: #FFF
     format:$ arrcache 31 ${dep smooth_level} "%{B${dep background} F${dep foreground}}"
 
@@ -15,11 +18,11 @@ yambar: "%{O40}${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B- O40}"
     percentage:L$ cache ${dep cache_time} ${dep calculation}
     cache_time:$ var 1000
 
-  options:$ refcache "${raw.mode}${greeting.datetime.mode}" 20000 "${dep sep}%{F#522}${raw}${dep sep}"
+  options:$ refcache "${raw.mode}${greeting.datetime.mode}" 20000 "${dep sep}%{F${dep fg} U${dep fg}}${raw}${dep sep}"
     raw:$ save ${mode} ${cmd "./scripts/options.sh ${} ${mode} ${dep greeting}" ? N/A}
       mode:$ var closed
     greeting:$ refcache ${datetime.mode} 10000 ${raw}
-      raw: %{B- F#532 U#532}Hi %{T2}${env USER}%{T-}, ${dep datetime}
+      raw: Hi %{T2}${env USER}%{T-}, ${dep datetime}
       datetime:$ save mode ${cmd "./scripts/date.sh ${} ${mode} ${stonks}" ? N/A}
         stonks:$ save cache ${poll "./scripts/stonks.sh ${name}" ? ${cache}}
           name: GME
@@ -28,11 +31,13 @@ yambar: "%{O40}${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B- O40}"
   wm:$ cache 200 ${raw}
     raw:$ save cache ${poll ./scripts/bspwm.sh ? ${cache}}
 
-  wifi: ${dep sep}%{F#532 B-} ${raw}
-    raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F#A86}" ? ${cache}}
+  wifi.light-fg:$ color L+0.3 ${dep fg}
+  wifi: ${dep sep}%{F${dep fg}} ${raw}
+    raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F${dep light-fg}}" ? ${cache}}
 
-  volume: ${dep sep}%{F#532 B-} ${raw}
-    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F#A86}" ? ${cache}}
+  volume.light-fg:$ color L=0.7 ${dep fg}
+  volume: ${dep sep}%{F${dep fg}} ${raw}
+    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${dep light-fg}}" ? ${cache}}
 
   status:$ clone warn_module
     text:$ save ${dep state} ${save cache ${poll}} ;
