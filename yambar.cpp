@@ -22,11 +22,13 @@ void cleanup() {
 }
 
 int main(int argc, char** argv) {
-  string file_path = "example.yamb";
-  std::ifstream file {file_path};
+  if (argc < 2) {
+    std::cout << "Usage: " << argv[0] << " <yamb-file> [lemonbar-launcher]" << std::endl;
+    return 1;
+  }
+  std::ifstream file {argv[1]};
   if (file.fail()) {
-    std::cout << "Failed to load file '" << file_path << "'. "
-        "Make sure that you are working in the directory test/example." << std::endl;
+    std::cout << "Failed to load file '" << argv[1] << "'." << std::endl;
     return 1;
   }
   node::errorlist err;
@@ -65,7 +67,7 @@ int main(int argc, char** argv) {
       dup2(pipes[1], STDIN_FILENO);
       close(pipes[0]);
       close(pipes[1]);
-      execl("/usr/bin/sh", "sh", "-c", argc > 1 ? argv[1] : "lemonbar", nullptr);
+      execl("/usr/bin/sh", "sh", "-c", argc > 2 ? argv[2] : "lemonbar", nullptr);
       return 127;
   }
   // Parent case
