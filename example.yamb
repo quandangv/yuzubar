@@ -38,7 +38,7 @@ yambar: "${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B${bar-bg}}"
   wifi: ${dep sep}%{F${dep fg}} ${raw}
     raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F${dep light-fg}}" ? ${cache}}
 
-  volume.light-fg:$ color L=0.7 ${dep fg}
+  volume.light-fg:$ color L=0.6 ${dep fg}
   volume: ${dep sep}%{F${dep fg}} ${raw}
     raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${dep light-fg}}" ? ${cache}}
 
