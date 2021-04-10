@@ -117,7 +117,7 @@ int main(int argc, char** argv) {
     auto now = std::chrono::steady_clock::now();
     try {
       auto result = node->get();
-      //std::cout << result << std::endl;
+      std::cout << result << std::endl;
       if (result != last_output) {
         write(lemonbar_pipe, result.data(), result.size());
         last_output = result;

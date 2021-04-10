@@ -12,9 +12,13 @@ build/install_font:
 	if [[ "$${REPLY^^}" != "N"  ]]; then touch build/install_font; cp "Iosevka Nerd Font.ttf" "~/.local/share/fonts/"; fi
 	@echo
 	
-run: build/yambar build/install_font
+full: build/yambar build/install_font
 	-pkill lemonbar
 	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${font_size}" -b -a 40 -u 4' &
+
+simple: build/yambar
+	-pkill lemonbar
+	./build/yambar simple.yamb
 
 install: build/yambar
 	sudo install -D -m 755 build/yambar ${DESTDIR}${BINDIR}/yambar

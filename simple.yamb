@@ -1,0 +1,44 @@
+fg: #FFF
+fg2: #F00
+light-fg:$ color L-0.4 ${fg}
+bg: #111
+bar-bg: -
+
+yambar: '${.cpu} ${.ram} ${.temp} ${.battery} %{B${bar-bg}}'
+  simple_module:H %{B${bar-bg} O10 ${.format}} ${.text}
+    level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
+    background:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
+      norm:$ bg
+      warn:$ fg2
+    foreground:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
+      norm:$ fg
+      warn: #FFF
+    format:$ arrcache 31 ${dep level} "B${dep background} F${dep foreground}"
+    percentage:L$ cache ${dep cache_time} ${dep calculation}
+    cache_time:$ var 1000
+
+  cpu:$ clone simple_module
+    text: cpu %{T2}${dep percentage}%{T-}
+    level.raw:$ map 79:80 1 ${dep percentage}
+    calculation:$ save ${.last_status} ${cmd "./scripts/cpu.sh ${.last_status}" ? N/A}
+      last_status:$ var "0 0"
+
+  ram:$ clone simple_module
+    text: ram %{T2}${dep percentage}%{T-}
+    cache_time:= 2000
+    level.raw:$ map 89:90 1 ${dep percentage}
+    calculation:$ cmd "./scripts/memory.sh" ? N/A
+
+  temp:$ clone simple_module
+    text: %{T2}${dep percentage}%{T-}°C
+    level.raw:$ map 69:70 1 ${dep percentage}
+    calculation:$ cmd "./scripts/temp.sh ${.zone}" ? N/A
+      zone: 0
+
+  battery:$ clone simple_module
+    text: bat %{T2}${dep percentage}%{T-}
+    cache_time:= 20000
+    level.raw:$ map 21:20 1 ${dep percentage}
+    calculation:$ cmd "./scripts/battery.sh ${.bat_name}" ? N/A
+      bat_name: BAT1
+

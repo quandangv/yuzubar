@@ -23,4 +23,4 @@ After installing the dependencies, this should be simple:
 make
 make install
 ```
-- To run an example, simply run `make run`
+- To run an example, simply run `make full`
