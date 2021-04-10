@@ -7,7 +7,7 @@ shift
 
 if [ "$1" = "open" ]; then
   echo open
-  echo "%{+u A:$close:}X%{A O20 $hibernate O20 $suspend O20 $hide $(./scripts/extra-options.sh) -u}"
+  echo "%{+u A:$close: -u}X%{A O20 +u $hibernate -u O20 +u $suspend -u $(./scripts/extra-options.sh) -u}"
 else
   shift
   echo close

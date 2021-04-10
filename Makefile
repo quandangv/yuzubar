@@ -1,6 +1,6 @@
-
 PREFIX?=/usr
 BINDIR=${PREFIX}/bin
+font_size=25
 
 build/yambar: yambar.cpp
 	mkdir -p build
@@ -12,7 +12,7 @@ install_font:
 
 run: build/yambar
 	-pkill lemonbar
-	./build/yambar 'lemonbar -f "GrenzeGotisch-VariableFont_wght.ttf:style=smallcaps:size=40" -f "Grenze Gotisch:size=40:weight=bold" -f "Iosevka Nerd Font:size=40" -g +0+13 -a 40' &
+	./build/yambar 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${font_size}" -g x50 -b -a 40 -u 4' &
 
 install: build/yambar
 	install -D -m 755 build/yambar ${DESTDIR}${BINDIR}/yambar
