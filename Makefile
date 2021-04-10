@@ -14,7 +14,7 @@ build/install_font:
 	
 run: build/yambar build/install_font
 	-pkill lemonbar
-	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${font_size}" -g x50 -b -a 40 -u 4' &
+	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${font_size}" -b -a 40 -u 4' &
 
 install: build/yambar
 	sudo install -D -m 755 build/yambar ${DESTDIR}${BINDIR}/yambar

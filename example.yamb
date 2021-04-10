@@ -1,77 +1,50 @@
-yambar: "${options} %{c} ${wm} %{r} ${wifi} ${volume} ${status} %{B${bar-bg}}"
-  fg: #FFF
-  fg2: #f6d07b
-  bg: #f2a94b
-  bar-bg: #435
-  sep: "%{B${dep bar-bg} O10}"
+fg: #FFF
+fg2: #f6d07b
+light-fg:$ color L-0.4 ${fg}
+bg: #f2a94b
+bar-bg: #435
+separator: "%{B${bar-bg} O10}"
 
-  warn_module.background.norm:$ dep bg
-  warn_module.foreground.norm:$ dep fg
-  warn_module:H ${dep sep}${format} ${text}
-    smooth_level:$i cache 5 ${smooth 0.3 ${map 1 30 ${dep level}}}
-    background:$ gradient "0:${norm} 30:${warn}" ${dep smooth_level}
+yambar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.status} %{B${bar-bg}}"
+
+  warn_module:H ${separator}${.format} ${.text}
+    level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
+    background:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
+      norm:$ bg
       warn: #ea4d46
-    foreground:$ gradient "0:${norm} 30:${warn}" ${dep smooth_level}
+    foreground:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
+      norm:$ fg
       warn: #FFF
-    format:$ arrcache 31 ${dep smooth_level} "%{B${dep background} F${dep foreground}}"
+    format:$ arrcache 31 ${dep level} "%{B${dep background} F${dep foreground}}"
 
   simple_module:H$ clone warn_module
     percentage:L$ cache ${dep cache_time} ${dep calculation}
     cache_time:$ var 1000
 
-  options:$ refcache "${raw.mode}${greeting.datetime.mode}" 20000 "${dep sep}%{F${dep fg} U${dep fg2}}${raw}${dep sep}"
-    raw:$ save ${mode} ${cmd "./scripts/options.sh ${} ${mode} ${dep greeting}" ? N/A}
+
+  left:$ refcache "${.raw.mode}${.greeting.datetime.mode}" 20000 "${separator}${.raw}${separator}"
+    raw:$ save ${.mode} ${cmd "./scripts/options.sh ${} ${.mode} ${dep greeting}" ? N/A}
       mode:$ var closed
-    greeting:$ refcache ${datetime.mode} 10000 ${raw}
+    greeting:$ refcache ${.datetime.mode} 10000 ${.raw}
       raw: Hi %{T2}${env USER}%{T-}, ${dep datetime}
-      datetime:$ save mode ${cmd "./scripts/date.sh ${} ${mode} ${stonks}" ? N/A}
-        stonks:$ save cache ${poll "./scripts/stonks.sh ${name}" ? ${cache}}
+      datetime:$ save mode ${cmd "./scripts/date.sh ${} ${.mode} ${.stonks}" ? N/A}
+        stonks:$ save cache ${poll "./scripts/stonks.sh ${.name}" ? ${.cache}}
           name: GME
 
+  wm:$ cache 200 '%{B${bg} F#FFF U${fg2}} ${.raw} %{B${bar-bg}}'
+    raw:$ save cache ${poll './scripts/bspwm.sh "%{T2 B${fg2}}" "%{T- B${bg}}"' ? ${.cache}}
 
-  wm.bg:$ dep bg
-  wm.fg2:$ dep fg2
-  wm:$ cache 200 '%{B${bg} F#FFF U${fg2}} ${raw} %{B${dep bar-bg}}'
-    raw:$ save cache ${poll './scripts/bspwm.sh "%{T2 B${dep fg2}}" "%{T- B${dep bg}}"' ? ${cache}}
+  wifi: ${separator}%{F${fg}} ${.raw}
+    raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F${light-fg}}" ? ${.cache}}
 
-  wifi.light-fg:$ color L+0.3 ${dep fg}
-  wifi: ${dep sep}%{F${dep fg}} ${raw}
-    raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F${dep light-fg}}" ? ${cache}}
-
-  volume.light-fg:$ color L=0.6 ${dep fg}
-  volume: ${dep sep}%{F${dep fg}} ${raw}
-    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${dep light-fg}}" ? ${cache}}
+  volume: ${separator}%{F${fg}} ${.raw}
+    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${light-fg}}" ? ${.cache}}
 
   status:$ clone warn_module
-    text:$ save ${dep state} ${save cache ${poll}} ;
-      poll:$ poll "./scripts/performance.sh ${} ${reload_time} ${bat_type} ${thermal_zone}"  ? ${dep cache}
+    text:$ save ${sibling state} ${save poll.cache ${.poll}} ;
+      poll:$ poll "./scripts/performance.sh ${} ${.reload_time} ${.bat_type} ${.thermal_zone}"  ? ${.cache}
         reload_time: 2
         bat_type: BAT1
         thermal_zone: 0
     state:$ var 0
-    level: ${dep state}
-
-  cpu:$ clone simple_module
-    text: cpu %{T2}${dep percentage}%{T-}
-    level:$ map 79:80 1 ${dep percentage}
-    calculation:$ save ${last_status} ${cmd "./scripts/cpu.sh ${last_status}" ? N/A}
-      last_status:$ var "0 0"
-
-  memory:$ clone simple_module
-    text: ram %{T2}${dep percentage}%{T-}
-    cache_time:= 2000
-    level:$ map 89:90 1 ${dep percentage}
-    calculation:$ cmd "./scripts/memory.sh" ? N/A
-
-  temp:$ clone simple_module
-    text: %{T2}${dep percentage}%{T-}°C
-    level:$ map 69:70 1 ${dep percentage}
-    calculation:$ cmd "./scripts/temp.sh ${zone}" ? N/A
-      zone: 0
-
-  battery:$ clone simple_module
-    text: bat %{T2}${dep percentage}%{T-}
-    cache_time:= 20000
-    level:$ map 21:20 1 ${dep percentage}
-    calculation:$ cmd "./scripts/battery.sh ${bat_name}" ? N/A
-      bat_name: BAT1
+    level.raw: ${sibling state}

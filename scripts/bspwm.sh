@@ -11,13 +11,13 @@ while read raw; do
     # Display each desktop differently based on its status
     case $dsk_status in
       # unfocused empty
-      "f") desktop_info[$index]='%{O12}·%{O12}'; ;;
+      "f") desktop_info[$index]='%{O8}·%{O8}'; ;;
       # unfocused occupied
-      "o") desktop_info[$index]="%{O12}${dsk_name,,}%{O12}"; ;;
+      "o") desktop_info[$index]="%{O8}${dsk_name,,}%{O8}"; ;;
       # focused
       "O" | "F" | "U") focused=$index; ;&
       # urgent
-      "u") desktop_info[$index]="$focus_open%{O12}${dsk_name^^}%{O12}$focus_close"; ;;
+      "u") desktop_info[$index]="$focus_open%{O8}${dsk_name^^}%{O8}$focus_close"; ;;
     esac
 
     # Clicking will switch to that desktop
