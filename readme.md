@@ -14,6 +14,7 @@ make install
 git clone https://github.com/quandangv/linked_nodes
 cd linked_nodes
 ./build.sh -A
+export LD_LIBRARY_DIR="$LD_LIBRARY_DIR:/usr/local/lib"
 ```
 
 ## Install & launch

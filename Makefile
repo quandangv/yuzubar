@@ -15,7 +15,7 @@ build/install_font:
 
 full: build/yambar build/install_font
 	-pkill lemonbar
-	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 4' &
+	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2'
 
 clean_bar:
 	-pkill lemonbar
