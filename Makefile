@@ -26,6 +26,6 @@ simple: build/yuzubar clean_bar
 	./build/yuzubar simple.yzb
 
 install: build/yuzubar
-	$$([ "$(whoami)" = root ] || echo sudo) install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
+	$$(type sudo>/dev/null && echo sudo) install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
 
 .PHONY:= run clean_bar
