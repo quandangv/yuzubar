@@ -13,7 +13,8 @@ show_memory() {
 }
 
 show_temperature() {
-  echo %{+u T2}$temperature%{T-}°C%{-u}
+  [[ -n "$1" ]] && label=TEMP || label=temp
+  echo %{+u}$label %{T2}$temperature%{T-}°C%{-u}
 }
 
 show_battery() {
@@ -25,6 +26,7 @@ cpu[0]="0 0"
 mode=0
 mode_count=4
 count=0
+
 while :; do
   mapfile -t cpu < <(./scripts/cpu.sh ${cpu[0]})
 
@@ -39,24 +41,29 @@ while :; do
   fi
 
   status=1
-  if (( $(echo "$battery < 20" | bc -l) )); then
+  if (( $(echo "$battery < 20" | bc -lq) )); then
     msg="$(show_battery true)"
-  elif (( $(echo "$temperature > 70" | bc -l) )); then
+  elif (( $(echo "$temperature > 70" | bc -lq) )); then
     msg="$(show_temperature)"
-  elif (( $(echo "$memory > 80" | bc -l) )); then
+  elif (( $(echo "$memory > 80" | bc -lq) )); then
     msg="$(show_memory true)"
-  elif (( $(echo "${cpu[1]} > 90" | bc -l) )); then
+  elif (( $(echo "${cpu[1]} > 90" | bc -lq) )); then
     msg="$(show_cpu true)"
   else
     status=0
-    case $mode in
-      0) msg="$(show_battery)"; ;;
-      1) msg="$(show_cpu)"; ;;
-      2) msg="$(show_temperature)"; ;;
-      3) msg="$(show_memory)"; ;;
-      *)
-        mode=0
-    esac
+    while
+      case $mode in
+        # Disabling battery/temperature: Delete the corresponding line here
+        0) msg="$(show_battery)"; ;;
+        1) msg="$(show_cpu)"; ;;
+        2) msg="$(show_temperature)"; ;;
+        3) msg="$(show_memory)"; ;;
+        *)
+          mode=$(((mode+1)%mode_count))
+          continue
+      esac
+      test
+    do :; done
   fi
   echo "$status;%{A:save $path=$(((mode+1)%mode_count)): A3:save $path=$(((mode+mode_count-1)%mode_count)):}$msg%{A A3}"
 

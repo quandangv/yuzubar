@@ -1,8 +1,8 @@
 fg: #FFF
-fg2: #f6d07b
+fg2: #81b177
 light-fg:$ color L-0.4 ${fg}
-bg: #f2a94b
-bar-bg: #435
+bg: #5a8e4c
+bar-bg: -
 separator: "%{B${bar-bg} O10}"
 
 yambar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.status} %{B${bar-bg}}"
@@ -42,9 +42,12 @@ yambar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.statu
 
   status:$ clone warn_module
     text:$ save ${sibling state} ${save poll.cache ${.poll}} ;
-      poll:$ poll "./scripts/performance.sh ${} ${.reload_time} ${.bat_type} ${.thermal_zone}"  ? ${.cache}
+      poll:$ poll './scripts/performance.sh 2>/dev/null "${}" "${.reload_time}" "${.bat_type}" "${.thermal_zone}"'  ? ${.cache}
         reload_time: 2
+        # Find the right battery by running `ls /sys/class/power_supply`
         bat_type: BAT1
-        thermal_zone: 0
+        # Find the right thermal zone by running `ls /sys/class/thermal | grep thermal_zone`
+        thermal_zone: thermal_zone0
+        # Disabling battery/temperature: follow the instructions in script/performance.sh
     state:$ var 0
     level.raw: ${sibling state}

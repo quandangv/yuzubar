@@ -1,6 +1,6 @@
 fg: #FFF
-fg2: #F00
 light-fg:$ color L-0.4 ${fg}
+warn: #F00
 bg: #111
 bar-bg: -
 
@@ -9,7 +9,7 @@ yambar: '${.cpu} ${.ram} ${.temp} ${.battery} %{B${bar-bg}}'
     level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
     background:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
       norm:$ bg
-      warn:$ fg2
+      warn:$ warn
     foreground:$ gradient "0:${.norm} 30:${.warn}" ${dep level}
       norm:$ fg
       warn: #FFF
