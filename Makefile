@@ -25,7 +25,7 @@ simple: build/yuzubar clean_bar
 	-pkill lemonbar
 	./build/yuzubar simple.yzb
 
-install: build/yuzubar clean_bar
-	sudo install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
+install: build/yuzubar
+	$$([ "$(whoami)" = root ] || echo sudo) install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
 
 .PHONY:= run clean_bar
