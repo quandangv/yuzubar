@@ -4,7 +4,7 @@ warn: #F00
 bg: #111
 bar-bg: -
 
-yambar: '${.cpu} ${.ram} ${.temp} ${.battery} %{B${bar-bg}}'
+yuzubar: '${.cpu} ${.ram} ${.temp} ${.battery} %{B${bar-bg}}'
   simple_module:H %{B${bar-bg} O10 ${.format}} ${.text}
     level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
     background:$ gradient "0:${.norm} 30:${.warn}" ${dep level}

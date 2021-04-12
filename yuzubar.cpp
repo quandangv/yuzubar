@@ -23,7 +23,7 @@ void cleanup() {
 
 int main(int argc, char** argv) {
   if (argc < 2) {
-    std::cout << "Usage: " << argv[0] << " <yamb-file> [lemonbar-launcher]" << std::endl;
+    std::cout << "Usage: " << argv[0] << " <yzb-file> [lemonbar-launcher]" << std::endl;
     return 1;
   }
   std::ifstream file {argv[1]};
@@ -75,9 +75,9 @@ int main(int argc, char** argv) {
   close(pipes[1]);
   pollfd pollin{pipes[0], POLLIN, 0};
 
-  auto node = wrapper->get_child_ptr("yambar"_ts);
+  auto node = wrapper->get_child_ptr("yuzubar"_ts);
   if (!node)
-    std::cerr << "Failed to retrieve the key at path 'yambar'";
+    std::cerr << "Failed to retrieve the key at path 'yuzubar'";
   string last_output = "";
   while (true) {
     if (poll(&pollin, 1, 0) > 0 && pollin.revents & POLLIN) {

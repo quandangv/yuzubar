@@ -4,28 +4,28 @@ BINDIR=${PREFIX}/bin
 font_size=25
 icon_size=22
 
-build/yambar: yambar.cpp
+build/yuzubar: yuzubar.cpp
 	mkdir -p build
-	g++ yambar.cpp -llinked_nodes -llinked_nodes_node -std=c++17 -o build/yambar || error Failed to build $@, did you install lemonbar and linked_nodes
+	g++ yuzubar.cpp -llinked_nodes -llinked_nodes_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linked_nodes
 
 build/install_font:
 	@read -p "Install fonts used by the example? [Y/n]: " -n 1 -r; \
 	if [[ "$${REPLY^^}" != "N"  ]]; then touch build/install_font; cp "Iosevka Nerd Font.ttf" "~/.local/share/fonts/"; fi
 	@echo
 
-full: build/yambar build/install_font
+full: build/yuzubar build/install_font
 	-pkill lemonbar
-	./build/yambar example.yamb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2'
+	./build/yuzubar example.yzb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2'
 
 clean_bar:
 	-pkill lemonbar
-	-pkill yambar
+	-pkill yuzubar
 
-simple: build/yambar clean_bar
+simple: build/yuzubar clean_bar
 	-pkill lemonbar
-	./build/yambar simple.yamb
+	./build/yuzubar simple.yzb
 
-install: build/yambar clean_bar
-	sudo install -D -m 755 build/yambar ${DESTDIR}${BINDIR}/yambar
+install: build/yuzubar clean_bar
+	sudo install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
 
 .PHONY:= run clean_bar

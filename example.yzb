@@ -5,7 +5,7 @@ bg: #5a8e4c
 bar-bg: -
 separator: "%{B${bar-bg} O10}"
 
-yambar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.status} %{B${bar-bg}}"
+yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.status} %{B${bar-bg}}"
 
   warn_module:H ${separator}${.format} ${.text}
     level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
