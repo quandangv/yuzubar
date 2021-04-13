@@ -41,13 +41,13 @@ while :; do
   fi
 
   status=1
-  if (( $(echo "$battery < 20" | bc -lq) )); then
+  if test "$battery" && (( $(echo "$battery < 20" | bc -lq) )); then
     msg="$(show_battery true)"
-  elif (( $(echo "$temperature > 70" | bc -lq) )); then
+  elif test "$temperature" && (( $(echo "$temperature > 70" | bc -lq) )); then
     msg="$(show_temperature)"
-  elif (( $(echo "$memory > 80" | bc -lq) )); then
+  elif test "$memory" && (( $(echo "$memory > 80" | bc -lq) )); then
     msg="$(show_memory true)"
-  elif (( $(echo "${cpu[1]} > 90" | bc -lq) )); then
+  elif test "${cpu[1]}" && (( $(echo "${cpu[1]} > 90" | bc -lq) )); then
     msg="$(show_cpu true)"
   else
     status=0
