@@ -42,7 +42,7 @@ yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.stat
 
   status:$ clone warn_module
     text:$ save ${sibling state} ${save poll.cache ${.poll}} ;
-      poll:$ poll './scripts/performance.sh 2>/dev/null "${}" "${.reload_time}" "${.bat_type}" "${.thermal_zone}"'  ? ${.cache}
+      poll:$ poll './scripts/performance.sh "${}" "${.reload_time}" "${.bat_type}" "${.thermal_zone}"'  ? ${.cache}
         reload_time: 2
         # Find the right battery by running `ls /sys/class/power_supply`
         bat_type: BAT1

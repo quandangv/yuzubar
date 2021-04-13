@@ -2,7 +2,7 @@ close="save $1=close"
 hibernate="A:systemctl hibernate:}Hibernate%{A"
 open="A:save $1=open: T2}···%{T- A"
 hide="A:save mode=true:}Hide%{A"
-name_desktop="A:./scripts/name-all-desktops.sh:}Name Desktops%{A"
+name_desktop="A:./scripts/prompt-name-desktop.sh:}Name Desktop%{A"
 suspend="A:systemctl suspend-then-hibernate:}Suspend%{A"
 shift
 

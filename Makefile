@@ -1,8 +1,8 @@
 PREFIX?=/usr
 SHELL=bash
 BINDIR=${PREFIX}/bin
-font_size=25
-icon_size=22
+font_size=22
+icon_size=20
 
 build/yuzubar: yuzubar.cpp
 	mkdir -p build
@@ -15,7 +15,7 @@ build/install_font:
 
 full: build/yuzubar build/install_font
 	-pkill lemonbar
-	./build/yuzubar example.yzb 'lemonbar -f "Source Sans Pro:size=${font_size}" -f "Source Sans Pro:size=${font_size}:weight=bold" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2'
+	./build/yuzubar example.yzb 'lemonbar -f "Source Sans Pro:size=${font_size}:weight=light" -f "Source Sans Pro:size=${font_size}:weight=regular" -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2 -g x40'
 
 clean_bar:
 	-pkill lemonbar
