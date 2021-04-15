@@ -6,7 +6,7 @@ icon_size=20
 
 build/yuzubar: yuzubar.cpp
 	mkdir -p build
-	g++ yuzubar.cpp -llinked_nodes -llinked_nodes_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linked_nodes
+	g++ yuzubar.cpp -llinked_lang -llinked_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linked_nodes
 
 build/install_font:
 	@read -p "Install fonts used by the example? [Y/n]: " -n 1 -r; \
@@ -27,5 +27,8 @@ simple: build/yuzubar clean_bar
 
 install: build/yuzubar
 	$$(type sudo>/dev/null && echo sudo) install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
+
+clean:
+	rm -rf build
 
 .PHONY:= run clean_bar
