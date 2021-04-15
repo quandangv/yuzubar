@@ -3,13 +3,16 @@
 #include <fstream>
 #include <thread>
 #include <unistd.h>
-#include <signal.h>
+#include <csignal>
 #include <poll.h>
 #include <sys/socket.h>
 
 int lemonbar_pipe;
+node::wrapper_s doc;
+node::base_s bar_source;
+const char* config_path;
 
-void sighandle(int signal) {
+void termhandle(int signal) {
   if (signal == SIGINT || signal == SIGTERM)
     exit(0);
 }
@@ -21,39 +24,56 @@ void cleanup() {
   }
 }
 
-int main(int argc, char** argv) {
-  if (argc < 2) {
-    std::cout << "Usage: " << argv[0] << " <yzb-file> [lemonbar-launcher]" << std::endl;
-    return 1;
-  }
-  std::ifstream file {argv[1]};
+void load_node() {
+  std::ifstream file {config_path};
   if (file.fail()) {
-    std::cout << "Failed to load file '" << argv[1] << "'." << std::endl;
-    return 1;
+    std::cout << "Failed to load file '" << config_path << "'." << std::endl;
+    exit(1);
   }
   node::errorlist err;
-  auto wrapper = parse_yml(file, err);
+  doc = parse_yml(file, err);
   file.close();
 
   if (!err.empty()) {
     std::cerr << "Error while parsing:\n";
     for (auto& e : err)
       std::cerr << "At " << e.first << ": " << e.second << std::endl;
-    return -1;
+    exit(1);
   }
   node::clone_context context;
-  wrapper->optimize(context);
+  doc->optimize(context);
   if (!context.errors.empty()) {
     std::cerr << "Error while optimizing:\n";
     for (auto& e : context.errors)
       std::cerr << "At " << e.first << ": " << e.second << std::endl;
-    return -1;
+    exit(1);
   }
+  bar_source = doc->get_child_ptr("yuzubar"_ts);
+  if (!bar_source) {
+    std::cerr << "Failed to retrieve the key at 'yuzubar'";
+    exit(1);
+  }
+}
+
+void reloadhandle(int signal) {
+  if (signal != SIGUSR1)
+    return;
+  load_node();
+}
+
+int main(int argc, char** argv) {
+  if (argc < 2) {
+    std::cout << "Usage: " << argv[0] << " <yzb-file> [lemonbar-launcher]" << std::endl;
+    return 1;
+  }
+  config_path = argv[1];
+  load_node();
 
   // Fork and call lemonbar
   atexit(cleanup);
-  signal(SIGINT, sighandle);
-  signal(SIGINT, sighandle);
+  signal(SIGUSR1, reloadhandle);
+  signal(SIGINT, termhandle);
+  signal(SIGTERM, termhandle);
   int pipes[2];
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, pipes) < 0)
     throw std::runtime_error("socketpair failed");
@@ -75,9 +95,6 @@ int main(int argc, char** argv) {
   close(pipes[1]);
   pollfd pollin{pipes[0], POLLIN, 0};
 
-  auto node = wrapper->get_child_ptr("yuzubar"_ts);
-  if (!node)
-    std::cerr << "Failed to retrieve the key at path 'yuzubar'";
   string last_output = "";
   while (true) {
     if (poll(&pollin, 1, 0) > 0 && pollin.revents & POLLIN) {
@@ -102,7 +119,7 @@ int main(int argc, char** argv) {
             auto sep = (char*)memchr(line_start, '=', buffer_end - line_start);
             if (sep) {
               *sep = 0;
-              if (!wrapper->set<string>(tstring(line_start), string(sep+1)))
+              if (!doc->set<string>(tstring(line_start), string(sep+1)))
                 std::cerr << "Can't set key: " << line_start << std::endl;
             } else std::cerr << "Invalid: " << line_start << std::endl;
           } else {
@@ -116,7 +133,7 @@ int main(int argc, char** argv) {
 
     auto now = std::chrono::steady_clock::now();
     try {
-      auto result = node->get();
+      auto result = bar_source->get();
       //std::cout << result << std::endl;
       if (result != last_output) {
         write(lemonbar_pipe, result.data(), result.size());

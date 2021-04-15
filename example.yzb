@@ -21,7 +21,6 @@ yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.stat
     percentage:L$ cache ${dep cache_time} ${dep calculation}
     cache_time:$ var 1000
 
-
   left:$ refcache "${.raw.mode}${.greeting.datetime.mode}" 20000 "${separator}${.raw}${separator}"
     raw:$ save ${.mode} ${cmd "./scripts/options.sh ${} ${.mode} ${dep greeting}" ? N/A}
       mode:$ var closed
