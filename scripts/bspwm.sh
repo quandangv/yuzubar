@@ -3,6 +3,7 @@ focus_open=$1
 focus_close=$2
 minus=
 plus=樂
+edit=
 
 while read raw; do
   focused=1
@@ -38,10 +39,12 @@ while read raw; do
   for index in "${!desktops[@]}"; do
     desktop_list+=${desktops[$((($index+$focused + size/2)%$size))]}
   done
-  [[ -n "$clean_cmd" ]] && clean_cmd=%{A:$clean_cmd: O8}$minus%{O8 A} || clean_cmd=%{O8}$minus%{O8}
+  [[ -n "$clean_cmd" ]] && clean_cmd="%{A:$clean_cmd: O8}$minus%{O8 A}" || clean_cmd="%{O8}$minus%{O8}"
+  add_cmd="%{A:bspc monitor -a ·; bspc desktop ^$(($size+1)) -f: O8}$plus%{O8 A}"
+  name_cmd="%{A:./scripts/prompt-name-desktop.sh: O8}$edit%{O8 A}"
 
   # Scroll through desktops
   scroll_cmd="A4:bspc desktop -f prev.local: A5:bspc desktop -f next.local:))"
-  echo "%{+u $scroll_cmd -f:}$desktop_list|%{A:bspc monitor -a ·; bspc desktop ^$(($size+1)) -f: O8}$plus%{O8 A}$clean_cmd%{-u A4 A5}"
+  echo "%{+u $scroll_cmd -f:}$desktop_list|$add_cmd$name_cmd$clean_cmd%{-u A4 A5}"
 done < <(bspc subscribe)
 
