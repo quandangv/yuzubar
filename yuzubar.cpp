@@ -7,10 +7,16 @@
 #include <poll.h>
 #include <sys/socket.h>
 
+using std::cout;
+using std::cerr;
+using std::endl;
+
 int lemonbar_pipe;
 node::wrapper_s doc;
 node::base_s bar_source;
-const char* config_path;
+
+char** config_paths;
+int config_path_count;
 
 void termhandle(int signal) {
   if (signal == SIGINT || signal == SIGTERM)
@@ -25,32 +31,37 @@ void cleanup() {
 }
 
 void load_node() {
-  std::ifstream file {config_path};
-  if (file.fail()) {
-    std::cout << "Failed to load file '" << config_path << "'." << std::endl;
-    exit(1);
-  }
-  node::errorlist err;
-  doc = parse_yml(file, err);
-  file.close();
+  doc = std::make_shared<node::wrapper>();
+  for (int i = 0; i < config_path_count; i++) {
+    auto path = config_paths[i];
+    std::ifstream file {path};
+    if (file.fail()) {
+      cerr << "Failed to load file: " << path << endl;
+      continue;
+    }
+    node::errorlist err;
+    parse_yml(file, err, doc);
+    file.close();
 
-  if (!err.empty()) {
-    std::cerr << "Error while parsing:\n";
-    for (auto& e : err)
-      std::cerr << "At " << e.first << ": " << e.second << std::endl;
-    exit(1);
+    if (!err.empty()) {
+      cerr << "Error while parsing file: " << path << endl;
+      for (auto& e : err)
+        cerr << "At " << e.first << ": " << e.second << endl;
+      continue;
+    }
   }
+
   node::clone_context context;
   doc->optimize(context);
   if (!context.errors.empty()) {
-    std::cerr << "Error while optimizing:\n";
+    cerr << "Error while optimizing:\n";
     for (auto& e : context.errors)
-      std::cerr << "At " << e.first << ": " << e.second << std::endl;
+      cerr << "At " << e.first << ": " << e.second << endl;
     exit(1);
   }
   bar_source = doc->get_child_ptr("yuzubar"_ts);
   if (!bar_source) {
-    std::cerr << "Failed to retrieve the key at 'yuzubar'";
+    cerr << "Failed to retrieve the key at 'yuzubar'";
     exit(1);
   }
 }
@@ -61,19 +72,36 @@ void reloadhandle(int signal) {
   load_node();
 }
 
+void print_help(const char* name) {
+  cout << "Syntax: " << name << " [-l cmd] <path-list>" << endl;
+  cout << "    Displays a status bar using the text retrieved from a Linkt tree" << endl << endl;
+  cout << "    The Linkt tree is created by merging the trees from the files in PATH-LIST" << endl;
+  cout << "    Options:" << endl;
+  cout << "      -l cmd  fork and call CMD to display the bar. Lemonbar-style bar text is "
+          "              written to the process's stdin. Use this to configure fonts and "
+          "              sizes of the bar" << endl;
+  cout << "      -h      display this help and exit" << endl;
+}
+
 int main(int argc, char** argv) {
-  if (argc < 2) {
-    std::cout << "Usage: " << argv[0] << " <yzb-file> [lemonbar-launcher]" << std::endl;
-    return 1;
-  }
-  config_path = argv[1];
+  const char* bar_cmd = "lemonbar";
+  for (int sw; (sw = getopt(argc, argv, "l:h")) != -1;) {
+    switch (sw) {
+      case 'l': bar_cmd = optarg; break;
+      case 'h': print_help(*argv); return 1;
+    }
+  } 
+
+  config_paths = argv + optind;
+  config_path_count = argc - optind;
   load_node();
 
-  // Fork and call lemonbar
   atexit(cleanup);
   signal(SIGUSR1, reloadhandle);
   signal(SIGINT, termhandle);
   signal(SIGTERM, termhandle);
+
+  // Fork and call lemonbar
   int pipes[2];
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, pipes) < 0)
     throw std::runtime_error("socketpair failed");
@@ -87,7 +115,7 @@ int main(int argc, char** argv) {
       dup2(pipes[1], STDIN_FILENO);
       close(pipes[0]);
       close(pipes[1]);
-      execl("/usr/bin/sh", "sh", "-c", argc > 2 ? argv[2] : "lemonbar", nullptr);
+      execl("/usr/bin/sh", "sh", "-c", bar_cmd, nullptr);
       return 127;
   }
   // Parent case
@@ -120,8 +148,8 @@ int main(int argc, char** argv) {
             if (sep) {
               *sep = 0;
               if (!doc->set<string>(tstring(line_start), string(sep+1)))
-                std::cerr << "Can't set key: " << line_start << std::endl;
-            } else std::cerr << "Invalid: " << line_start << std::endl;
+                cerr << "Can't set key: " << line_start << endl;
+            } else cerr << "Invalid: " << line_start << endl;
           } else {
             system(line_start);
           }
@@ -134,13 +162,13 @@ int main(int argc, char** argv) {
     auto now = std::chrono::steady_clock::now();
     try {
       auto result = bar_source->get();
-      //std::cout << result << std::endl;
+      //cout << result << endl;
       if (result != last_output) {
         write(lemonbar_pipe, result.data(), result.size());
         last_output = result;
       }
     } catch (const std::exception& e) {
-      std::cerr << "Error while retrieving key: " << e.what() << std::endl;
+      cerr << "Error while retrieving key: " << e.what() << endl;
     }
     std::this_thread::sleep_until(now + std::chrono::milliseconds(50));
   }
