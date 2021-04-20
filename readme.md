@@ -1,8 +1,8 @@
 # Yuzubar - the YAML-based status bar
 
 <p align="center">
-  <img src="previews/mars-theme.png" width="45%" alt="Themes using yuzubar">
-  <img src="previews/nuclear-theme.png" width="45%" alt="Themes using yuzubar">
+  <img src="previews/mars-theme.png" width="49%" alt="Themes using yuzubar">
+  <img src="previews/nuclear-theme.png" width="49%" alt="Themes using yuzubar">
 </p>
 
 
