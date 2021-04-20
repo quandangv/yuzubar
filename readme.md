@@ -1,5 +1,10 @@
 # Yuzubar - the YAML-based status bar
 
+<p align="center">
+  <img src="previews/mars-theme.png" alt="Themes using yuzubar">
+  <img src="previews/nuclear-theme.png" alt="Themes using yuzubar">
+</p>
+
 ## Dependencies
 Yuzubar currently depends on Lemonbar and [Linkt](https://github.com/quandangv/linkt); I'm working to merge Lemonbar into Yambar itself.
 1. **Lemonbar** - It's recommended to install the xft-supported version of lemonbar
