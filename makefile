@@ -7,7 +7,7 @@ font=Montserrat
 
 build/yuzubar: yuzubar.cpp
 	mkdir -p build
-	g++ yuzubar.cpp -llinked_lang -llinked_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linked_nodes
+	g++ yuzubar.cpp -llinkt_lang -llinkt_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linkt_nodes
 
 build/install_font:
 	@read -p "Install fonts used by the example? [Y/n]: " -n 1 -r; \
