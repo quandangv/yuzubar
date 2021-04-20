@@ -1,11 +1,11 @@
 #!/bin/bash
-namefile=$1
-newname=$2
-desktop=$3
+newname=$1
+desktop=$2
 
-if glyph=$(grep " ${newname,,}$" "$namefile"); then
-  echo -e found glyph: $glyph "\u${glyph:2:4}"
-  newname=$(echo -e "\u${glyph:2:4}")
+if [ "${newname:0:2}" = "0x" ]; then
+  set -- $newname
+  echo -e found glyph: $2 "\u${1:2}"
+  newname=$(echo -e "\u${1:2}")
 fi
 
 bspc desktop $desktop -n "$newname"

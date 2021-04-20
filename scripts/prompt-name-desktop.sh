@@ -1,2 +1,2 @@
 #!/bin/bash
-./scripts/name-desktop.sh iosevka-glyphs.nam $(echo | dmenu -b -p "Enter name for desktop: ")
+./scripts/name-desktop.sh "$(cat iosevka-glyphs.nam | dmenu -b -p 'Enter name for desktop: ')"
