@@ -11,7 +11,7 @@ build/yuzubar: yuzubar.cpp
 
 build/install_font:
 	@read -p "Install fonts used by the example? [Y/n]: " -n 1 -r; \
-	if [[ "$${REPLY^^}" != "N"  ]]; then cp "Iosevka Nerd Font.ttf" ~/.local/share/fonts/ && touch build/install_font; fi
+	if [[ "$${REPLY^^}" != "N"  ]]; then cp "font/Iosevka Nerd Font.ttf" ~/.local/share/fonts/ && touch build/install_font; fi
 	@echo
 
 kill_bar:
