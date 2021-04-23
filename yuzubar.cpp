@@ -80,10 +80,15 @@ void print_help(const char* name) {
 
 int main(int argc, char** argv) {
   const char* bar_cmd = "lemonbar";
-  for (int sw; (sw = getopt(argc, argv, "l:h")) != -1;) {
+  for (int sw; (sw = getopt(argc, argv, "l:hk")) != -1;) {
     switch (sw) {
       case 'l': bar_cmd = optarg; break;
       case 'h': print_help(*argv); return 1;
+      case 'k':
+        cout << "Killing lemonbar and yuzubar" << endl;
+        execl("/bin/pkill", "pkill", "yuzubar");
+        execl("/bin/pkill", "pkill", "lemonbar");
+        break;
     }
   } 
 
