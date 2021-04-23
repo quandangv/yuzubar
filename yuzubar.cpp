@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
       case 'l': bar_cmd = optarg; break;
       case 'h': print_help(*argv); return 1;
       case 'k':
-        cout << "Killing lemonbar and yuzubar" << endl;
+        cout << "Killing previous instances of lemonbar and yuzubar" << endl;
         execl("/bin/pkill", "pkill", "yuzubar");
         execl("/bin/pkill", "pkill", "lemonbar");
         break;
