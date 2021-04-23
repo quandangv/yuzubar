@@ -17,11 +17,12 @@ cd linked_nodes
 export LD_LIBRARY_DIR="$LD_LIBRARY_DIR:/usr/local/lib"
 ```
 
-## Install & launch
-After installing the dependencies, this should be simple:
-- To install the tool:
+## Install
+After installing the dependencies, execute these command to install yuzubar:
 ```
 make
 make install
 ```
-- To run an example, simply run `make full`
+
+## Examples
+To launch an example bar, simply run `make full`. To launch a simple, easy-to-understand bar, run `make simple`. The commands used to start the bar in these examples will be printed out by _make_
