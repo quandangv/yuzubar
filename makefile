@@ -9,7 +9,7 @@ icon_size=20
 # Build the main executable
 build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
-	g++ yuzubar.cpp -llinkt_lang -llinkt_node -std=c++17 -o build/yuzubar -I build/generated || error Failed to build $@, did you install lemonbar and linkt_nodes
+	g++ yuzubar.cpp -llinkt_lang -llinkt_node -L/usr/local/lib -std=c++17 -o build/yuzubar -I build/generated || error Failed to build $@, did you install lemonbar and linkt_nodes?
 
 # Preprocess the file containing command-line help
 build/generated/command-line-help.txt: command-line-help.txt.in
