@@ -5,7 +5,7 @@ bg: #5a8e4c
 bar-bg: -
 separator: "%{B${bar-bg} O10}"
 
-yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.status} %{B${bar-bg}}"
+yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.mic} ${.status} %{B${bar-bg}}"
 
   warn_module:H ${separator}${.format} ${.text}
     level:$i cache 5 ${smooth 0.3 ${map 1 30 ${.raw}}}
@@ -37,7 +37,10 @@ yuzubar: "%{F${fg} U${fg2}}${.left} %{c} ${.wm} %{r} ${.wifi} ${.volume} ${.stat
     raw:$ save cache ${poll "./scripts/wifi.sh 4 %{F${light-fg}}" ? ${.cache}}
 
   volume: ${separator}%{F${fg}} ${.raw}
-    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${light-fg}}" ? ${.cache}}
+    raw:$ save cache ${poll "./scripts/volume.sh 10 %{F${light-fg}} Master vol" ? ${.cache}}
+
+  mic: ${separator}%{F${fg}} ${.raw}
+    raw:$ save cache ${poll "./scripts/volume.sh 5 %{F${light-fg}} Mic mic" ? ${.cache}}
 
   status:$ clone warn_module
     text:$ save ${sibling state} ${save poll.cache ${.poll}} ;
