@@ -73,14 +73,9 @@ void reloadhandle(int signal) {
 }
 
 void print_help(const char* name) {
-  cout << "Syntax: " << name << " [-l cmd] <path-list>" << endl;
-  cout << "  Displays a status bar using the text retrieved from a Linkt tree" << endl << endl;
-  cout << "  The Linkt tree is created by merging the trees from the files in PATH-LIST" << endl;
-  cout << "  Options:" << endl;
-  cout << "    -l cmd  fork and call CMD to display the bar. Lemonbar-style bar text is " << endl
-       << "            written to the process's stdin. Use this to configure fonts and " << endl
-       << "            sizes of the bar" << endl;
-  cout << "    -h      display this help and exit" << endl;
+  cout <<
+    #include "command-line-help.txt"
+    << endl;
 }
 
 int main(int argc, char** argv) {

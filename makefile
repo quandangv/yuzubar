@@ -1,13 +1,16 @@
 PREFIX?=/usr
-SHELL=bash
 BINDIR=${PREFIX}/bin
+font=Montserrat
 font_size=22
 icon_size=20
-font=Montserrat
 
-build/yuzubar: yuzubar.cpp
+build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
-	g++ yuzubar.cpp -llinkt_lang -llinkt_node -std=c++17 -o build/yuzubar || error Failed to build $@, did you install lemonbar and linkt_nodes
+	g++ yuzubar.cpp -llinkt_lang -llinkt_node -std=c++17 -o build/yuzubar -I build/generated || error Failed to build $@, did you install lemonbar and linkt_nodes
+
+build/generated/command-line-help.txt: command-line-help.txt.in
+	mkdir -p build/generated
+	sed 's/^/"/g; s/$$/\\n"/g' command-line-help.txt.in > build/generated/command-line-help.txt
 
 build/install_font:
 	@read -p "Install fonts used by the example? [Y/n]: " -n 1 -r; \
