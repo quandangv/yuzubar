@@ -33,10 +33,11 @@ simple: build/yuzubar prep_example
 
 # Launch a full example bar
 full: build/yuzubar build/install_font prep_example
-	./build/yuzubar -k example.yzb ~/.config/yuzubar/default.yzb -l 'lemonbar \
-      -f "${font}:size=${font_size}:weight=light" \
-      -f "${font}:size=${font_size}:weight=regular" \
-      -f "Iosevka Nerd Font:size=${icon_size}" -b -a 40 -u 2 -g x40' \
+	./build/yuzubar -k example.yzb ~/.config/yuzubar/default.yzb \
+	    -f "${font}:size=${font_size}:weight=light" \
+	    -f "${font}:size=${font_size}:weight=regular" \
+	    -f "Iosevka Nerd Font:size=${icon_size}" \
+	    -l "lemonbar -b -a 40 -u 2 -g x40" \
 
 # Install yuzubar
 install: build/yuzubar
