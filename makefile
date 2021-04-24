@@ -12,7 +12,7 @@ build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	g++ yuzubar.cpp -llinkt_lang -llinkt_node -L/usr/local/lib -std=c++17 -o build/yuzubar -I build/generated
 
 prebuilt/command-line-help.txt: command-line-help.md
-	-pandoc -f gfm -t plain -o prebuilt/command-line-help.txt command-line-help.md
+	-pandoc -t plain --columns=80 -o prebuilt/command-line-help.txt command-line-help.md
 
 # Preprocess the file containing command-line help
 build/generated/command-line-help.txt: prebuilt/command-line-help.txt
