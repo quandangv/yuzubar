@@ -33,5 +33,5 @@ make install
 To launch an example bar, simply run `make full`. To launch a simple, easy-to-understand bar, run `make simple`. The commands used to start the bar in these examples will be printed out by _make_.
 
 ## Usage
-Instructions for the command-line tool can be found in the [command-line-help](command-line-help.txt.in).
+Instructions for the command-line tool can be found in the [command-line-help](command-line-help.md).
 For instructions on the syntax of .yzb files, refer to the [Linkt repo](https://github.com/quandangv/linkt)
