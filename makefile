@@ -11,10 +11,13 @@ build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
 	g++ yuzubar.cpp -llinkt_lang -llinkt_node -L/usr/local/lib -std=c++17 -o build/yuzubar -I build/generated || error Failed to build $@, did you install lemonbar and linkt_nodes?
 
+prebuilt/command-line-help.txt: command-line-help.md
+	-pandoc -f gfm -t plain -o prebuilt/command-line-help.txt command-line-help.md
+
 # Preprocess the file containing command-line help
-build/generated/command-line-help.txt: command-line-help.txt.in
+build/generated/command-line-help.txt: prebuilt/command-line-help.txt
 	mkdir -p build/generated
-	sed 's/^/"/g; s/$$/\\n"/g' command-line-help.txt.in > build/generated/command-line-help.txt
+	sed 's/^/"/g; s/$$/\\n"/g' prebuilt/command-line-help.txt > build/generated/command-line-help.txt
 
 # Prompt the user to install the font for the examples
 build/install_font:
