@@ -1,0 +1,6 @@
+'\" t
+.TH yuzubar 1 "$date/nowrap$" "yuzubar" "Yuzubar Manual"
+.hy
+$body$
+.SH AUTHOR
+$for(author)$$author$$sep$; $endfor$.

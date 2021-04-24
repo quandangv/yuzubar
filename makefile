@@ -1,5 +1,6 @@
-PREFIX?=/usr
-BINDIR=${PREFIX}/bin
+AUTHOR = Quandangv
+PREFIX ?= /usr
+BINDIR = ${PREFIX}/bin
 
 CXX ?= g++
 CFLAGS += -Wall -Os -D_GNU_SOURCE
@@ -17,20 +18,24 @@ build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	${CXX} yuzubar.cpp -o build/yuzubar -I build/generated ${CFLAGS} ${LDFLAGS}
 
 # Preprocess the file containing command-line help
-build/generated/command-line-help.txt: doc/command-line-help.txt
+build/generated/command-line-help.txt: doc/prebuilt/command-line-help.txt
 	mkdir -p build/generated
-	sed 's/^/"/g; s/$$/\\n"/g' doc/command-line-help.txt > build/generated/command-line-help.txt
+	sed 's/^/"/g; s/$$/\\n"/g' doc/prebuilt/command-line-help.txt > build/generated/command-line-help.txt
 
 all: doc debug
 
 debug: build/yuzubar
 debug: CXX += ${CFDEBUG}
 
-doc: command-line-help.md
-	mkdir -p doc
-	pandoc -t plain --columns=80 -o doc/command-line-help.txt command-line-help.md
-	echo ".TH yuzubar 1 \"$$(date +%Y-%m-%d)\" \"yuzubar\" \"yuzubar Manual\"" > doc/yuzubar.man
-	pandoc -t man --shift-heading-level-by=-1 command-line-help.md >> doc/yuzubar.man
+doc: doc/command-line-help.md
+	mkdir -p doc/prebuilt
+	pandoc -t plain --columns=80 -o doc/prebuilt/command-line-help.txt doc/command-line-help.md
+	#echo ".TH yuzubar 1 \"$$(date +%Y-%m-%d)\" \"yuzubar\" \"yuzubar Manual\"" > doc/prebuilt/yuzubar.man
+	pandoc -t man \
+	  --shift-heading-level-by=-1 \
+	  --template=doc/man-template.man \
+	  -V author=${AUTHOR} \
+	  doc/command-line-help.md > doc/prebuilt/yuzubar.man
 
 # Prompt the user to install the font for the examples
 build/install_font:
@@ -58,13 +63,13 @@ full: build/yuzubar build/install_font prep_example
 # Install yuzubar
 install: build/yuzubar
 	install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
-	install -D -m 644 doc/yuzubar.man ${DESTDIR}${PREFIX}/share/man/man1/yuzubar.1
+	install -D -m 644 doc/prebuilt/yuzubar.man ${DESTDIR}${PREFIX}/share/man/man1/yuzubar.1
 
 # Delete the build directory
 clean:
 	rm -rf build
 
 sterilize: clean
-	rm -rf doc
+	rm -rf doc/prebuilt
 
 .PHONY: all run doc clean sterilize prep_example

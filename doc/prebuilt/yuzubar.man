@@ -1,8 +1,9 @@
-.TH yuzubar 1 "2021-04-25" "yuzubar" "yuzubar Manual"
-.SH Syntax
+'\" t
+.TH yuzubar 1 "" "yuzubar" "Yuzubar Manual"
+.hy
+.SH DESCRIPTION
 .PP
 \f[B]\f[CB]yuzubar\f[B]\f[R] \f[C][options] <path-list>\f[R]
-.SH Description
 .PP
 Displays a status bar using the text retrieved from a Linkt tree, which
 is created by merging the the Linkt trees parsed from the files in
@@ -10,7 +11,7 @@ is created by merging the the Linkt trees parsed from the files in
 .PP
 For more information on how Linkt trees are parsed, go to the Linkt
 repo: https://github.com/quandangv/linkt
-.SH Options
+.SH OPTIONS
 .PP
 .TS
 tab(@);
@@ -38,3 +39,5 @@ Specify font for Lemonbar.
 Can be used multiple times to load more than a single font.
 T}
 .TE
+.SH AUTHOR
+Quandangv.
