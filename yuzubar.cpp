@@ -80,10 +80,12 @@ void print_help(const char* name) {
 
 int main(int argc, char** argv) {
   const char* bar_cmd = "lemonbar";
-  for (int sw; (sw = getopt(argc, argv, "l:hk")) != -1;) {
+  string bar_options = "";
+  for (int sw; (sw = getopt(argc, argv, "l:hkf:")) != -1;) {
     switch (sw) {
       case 'l': bar_cmd = optarg; break;
       case 'h': print_help(*argv); return 1;
+      case 'f': bar_options = bar_options + " -f '" + optarg + "'"; break;
       case 'k':
         cout << "Killing previous instances of lemonbar and yuzubar" << endl;
         execl("/bin/pkill", "pkill", "yuzubar");
@@ -115,7 +117,7 @@ int main(int argc, char** argv) {
       dup2(pipes[1], STDIN_FILENO);
       close(pipes[0]);
       close(pipes[1]);
-      execl("/usr/bin/sh", "sh", "-c", bar_cmd, nullptr);
+      execl("/usr/bin/sh", "sh", "-c", (bar_cmd + bar_options).data(), nullptr);
       return 127;
   }
   // Parent case
