@@ -11,23 +11,26 @@ font=Montserrat
 font_size=22
 icon_size=20
 
-all: build/yuzubar
-
 # Build the main executable
 build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
 	${CXX} yuzubar.cpp -o build/yuzubar -I build/generated ${CFLAGS} ${LDFLAGS}
 
+# Preprocess the file containing command-line help
+build/generated/command-line-help.txt: doc/command-line-help.txt
+	mkdir -p build/generated
+	sed 's/^/"/g; s/$$/\\n"/g' doc/command-line-help.txt > build/generated/command-line-help.txt
+
+all: doc debug
+
 debug: build/yuzubar
 debug: CXX += ${CFDEBUG}
 
-prebuilt/command-line-help.txt: command-line-help.md
-	-pandoc -t plain --columns=80 -o prebuilt/command-line-help.txt command-line-help.md
-
-# Preprocess the file containing command-line help
-build/generated/command-line-help.txt: prebuilt/command-line-help.txt
-	mkdir -p build/generated
-	sed 's/^/"/g; s/$$/\\n"/g' prebuilt/command-line-help.txt > build/generated/command-line-help.txt
+doc: command-line-help.md
+	mkdir -p doc
+	pandoc -t plain --columns=80 -o doc/command-line-help.txt command-line-help.md
+	echo ".TH yuzubar 1 \"$$(date +%Y-%m-%d)\" \"yuzubar\" \"yuzubar Manual\"" > doc/yuzubar.man
+	pandoc -t man --shift-heading-level-by=-1 command-line-help.md >> doc/yuzubar.man
 
 # Prompt the user to install the font for the examples
 build/install_font:
@@ -54,10 +57,14 @@ full: build/yuzubar build/install_font prep_example
 
 # Install yuzubar
 install: build/yuzubar
-	$$(type sudo>/dev/null && echo sudo) install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
+	install -D -m 755 build/yuzubar ${DESTDIR}${BINDIR}/yuzubar
+	install -D -m 644 doc/yuzubar.man ${DESTDIR}${PREFIX}/share/man/man1/yuzubar.1
 
 # Delete the build directory
 clean:
 	rm -rf build
 
-.PHONY: run clean kill_bar prep_example
+sterilize: clean
+	rm -rf doc
+
+.PHONY: all run doc clean sterilize prep_example
