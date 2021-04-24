@@ -2,18 +2,24 @@ PREFIX?=/usr
 BINDIR=${PREFIX}/bin
 
 CXX ?= g++
-CFLAGS += -Wall -std=c99 -Os -DVERSION="\"$(VERSION)\"" -D_GNU_SOURCE
+CFLAGS += -Wall -Os -D_GNU_SOURCE
 LDFLAGS += -llinkt_lang -llinkt_node -L/usr/local/li -std=c++17
+CFDEBUG = -g3 -pedantic -Wall -Wunused-parameter -Wlong-long -Wsign-conversion -Wconversion
 
 # Font name and sizes for the example bars
 font=Montserrat
 font_size=22
 icon_size=20
 
+all: build/yuzubar
+
 # Build the main executable
 build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
-	${CXX} yuzubar.cpp ${LDFLAGS} -o build/yuzubar -I build/generated
+	${CXX} yuzubar.cpp -o build/yuzubar -I build/generated ${CFLAGS} ${LDFLAGS}
+
+debug: build/yuzubar
+debug: CXX += ${CFDEBUG}
 
 prebuilt/command-line-help.txt: command-line-help.md
 	-pandoc -t plain --columns=80 -o prebuilt/command-line-help.txt command-line-help.md
@@ -54,4 +60,4 @@ install: build/yuzubar
 clean:
 	rm -rf build
 
-.PHONY:= run kill_bar prep_example
+.PHONY: run clean kill_bar prep_example

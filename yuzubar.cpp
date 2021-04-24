@@ -72,10 +72,16 @@ void reloadhandle(int signal) {
   load_node();
 }
 
-void print_help(const char* name) {
+void print_help() {
   cout <<
     #include "command-line-help.txt"
     << endl;
+}
+
+void* my_memchr(void* ptr, int ch, long int count) {
+  #pragma GCC diagnostic ignored "-Wsign-conversion"
+  return count <= 0 ? nullptr : memchr(ptr, ch, count);
+  #pragma GCC diagnostic pop
 }
 
 int main(int argc, char** argv) {
@@ -84,7 +90,7 @@ int main(int argc, char** argv) {
   for (int sw; (sw = getopt(argc, argv, "l:hkf:")) != -1;) {
     switch (sw) {
       case 'l': bar_cmd = optarg; break;
-      case 'h': print_help(*argv); return 1;
+      case 'h': print_help(); return 1;
       case 'f': bar_options = bar_options + " -f '" + optarg + "'"; break;
       case 'k':
         cout << "Killing previous instances of lemonbar and yuzubar" << endl;
@@ -107,7 +113,7 @@ int main(int argc, char** argv) {
   int pipes[2];
   if (socketpair(AF_UNIX, SOCK_STREAM, 0, pipes) < 0)
     throw std::runtime_error("socketpair failed");
-  switch(auto pid = fork()) {
+  switch(fork()) {
     case -1:
       close(pipes[0]);
       close(pipes[1]);
@@ -139,14 +145,14 @@ int main(int argc, char** argv) {
         }
         buffer_end += count;
         char* line_start = buffer, *newline;
-        while ((newline = (char*)memchr(line_start, '\n', buffer_end - line_start))) {
+        while ((newline = (char*)my_memchr(line_start, '\n', buffer_end - line_start))) {
           *newline = 0;
           if (!memcmp(line_start, "save ", 5)) {
             line_start += 5;
             for (; line_start < newline; line_start++)
               if (!std::isspace(*line_start))
                 break;
-            auto sep = (char*)memchr(line_start, '=', buffer_end - line_start);
+            auto sep = (char*)my_memchr(line_start, '=', buffer_end - line_start);
             if (sep) {
               *sep = 0;
               if (!doc->set<string>(tstring(line_start), string(sep+1)))
