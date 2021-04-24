@@ -1,6 +1,10 @@
 PREFIX?=/usr
 BINDIR=${PREFIX}/bin
 
+CXX ?= g++
+CFLAGS += -Wall -std=c99 -Os -DVERSION="\"$(VERSION)\"" -D_GNU_SOURCE
+LDFLAGS += -llinkt_lang -llinkt_node -L/usr/local/li -std=c++17
+
 # Font name and sizes for the example bars
 font=Montserrat
 font_size=22
@@ -9,7 +13,7 @@ icon_size=20
 # Build the main executable
 build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 	mkdir -p build
-	g++ yuzubar.cpp -llinkt_lang -llinkt_node -L/usr/local/lib -std=c++17 -o build/yuzubar -I build/generated
+	${CXX} yuzubar.cpp ${LDFLAGS} -o build/yuzubar -I build/generated
 
 prebuilt/command-line-help.txt: command-line-help.md
 	-pandoc -t plain --columns=80 -o prebuilt/command-line-help.txt command-line-help.md
