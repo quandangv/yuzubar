@@ -1,7 +1,7 @@
-**Syntax**: yuzubar [-l cmd] <path-list>
+**Syntax**: `yuzubar [options] <path-list>`
 
 Displays a status bar using the text retrieved from a Linkt tree, which is
-created by merging the the Linkt tree parsed from the files in `path-list`.
+created by merging the the Linkt trees parsed from the files in `path-list`.
 
 For more information on how Linkt trees are parsed, go to the Linkt repo:
 https://github.com/quandangv/linkt
