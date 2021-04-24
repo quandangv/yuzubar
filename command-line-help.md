@@ -8,9 +8,9 @@ https://github.com/quandangv/linkt
 
 |Option|Description|
 |:---:|:---|
-|_**-l** cmd_|Fork and call `cmd` to display the bar. Lemonbar-style text will be|
-||written to the process's stdin|
+|_**-l** cmd_|Fork and call `cmd` to display the bar. Lemonbar-style text will be    |
+  ||written to the process's stdin|
 |_**-h**_|Display this help and exit|
 |_**-k**_|Use pkill to kill all previous instances of yuzubar and lemonbar|
 |_**-f**_|Specify font for Lemonbar. Can be used multiple times to load more|
-||than a single font.|
+  ||than a single font.|
