@@ -18,7 +18,7 @@ make install
 2. **Linkt** - Developed by myself :), it contains most of the core functionalities.
 ```
 git clone https://github.com/quandangv/linkt
-cd linked_nodes
+cd linkt
 ./build.sh -AP /usr
 ```
 
