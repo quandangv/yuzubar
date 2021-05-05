@@ -90,7 +90,7 @@ int main(int argc, char** argv) {
   for (int sw; (sw = getopt(argc, argv, "l:hkf:")) != -1;) {
     switch (sw) {
       case 'l': bar_cmd = optarg; break;
-      case 'h': print_help(); return 1;
+      case 'h': print_help(); return 0;
       case 'f': bar_options = bar_options + " -f '" + optarg + "'"; break;
       case 'k':
         cout << "Killing previous instances of lemonbar and yuzubar" << endl;
