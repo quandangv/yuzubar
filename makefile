@@ -21,6 +21,8 @@ build/yuzubar: yuzubar.cpp build/generated/command-line-help.txt
 build/generated/command-line-help.txt: doc/prebuilt/command-line-help.txt
 	mkdir -p build/generated
 	sed 's/^/"/g; s/$$/\\n"/g' doc/prebuilt/command-line-help.txt > build/generated/command-line-help.txt
+test: build/yuzubar
+	./build/yuzubar -h
 
 all: doc debug
 
@@ -49,11 +51,11 @@ prep_example:
 	@echo Command used to start yuzubar:
 
 # Launch a simple bar
-simple: build/yuzubar prep_example 
+simple: build/yuzubar prep_example simple.yzb
 	./build/yuzubar -k simple.yzb
 
 # Launch a full example bar
-full: build/yuzubar build/install_font prep_example
+full: build/yuzubar build/install_font prep_example example.yzb
 	./build/yuzubar -k example.yzb ~/.config/yuzubar/default.yzb \
 	    -f "${font}:size=${font_size}:weight=light" \
 	    -f "${font}:size=${font_size}:weight=regular" \
@@ -72,4 +74,4 @@ clean:
 sterilize: clean
 	rm -rf doc/prebuilt
 
-.PHONY: all run doc clean sterilize prep_example
+.PHONY: all run doc clean sterilize prep_example test
