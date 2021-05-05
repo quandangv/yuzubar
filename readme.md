@@ -19,7 +19,7 @@ make install
 ```
 git clone https://github.com/quandangv/linkt
 cd linked_nodes
-./build.sh -A
+./build.sh -AP /usr
 ```
 
 ## Install

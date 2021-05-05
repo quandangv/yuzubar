@@ -3,12 +3,15 @@
 .hy
 .SH DESCRIPTION
 .PP
-\f[B]\f[CB]yuzubar\f[B]\f[R] \f[C][options] <path-list>\f[R]
+\f[B]Syntax\f[R]: \f[B]\f[CB]yuzubar\f[B]\f[R]
+\f[C][options] <path-list>\f[R]
 .PP
 Displays a status bar using the text retrieved from a Linkt tree, which
 is created by merging the the Linkt trees parsed from the files in
 \f[C]path-list\f[R].
-.PP
+.PD 0
+.P
+.PD
 For more information on how Linkt trees are parsed, go to the Linkt
 repo: https://github.com/quandangv/linkt
 .SH OPTIONS
@@ -17,26 +20,26 @@ repo: https://github.com/quandangv/linkt
 tab(@);
 rw(7.0n) lw(63.0n).
 T{
-\f[I]\f[BI]-l\f[I] cmd\f[R]
+\f[B]\f[CB]-f\f[B]\f[R]
 T}@T{
-Fork and call \f[C]cmd\f[R] to display the bar.
-Lemonbar-style text will be written to the process\[cq]s stdin
+Specify font for Lemonbar.
+Can be used multiple times to load more than a single font.
 T}
 T{
-\f[I]\f[BI]-h\f[I]\f[R]
+\f[B]\f[CB]-h\f[B]\f[R]
 T}@T{
 Display this help and exit
 T}
 T{
-\f[I]\f[BI]-k\f[I]\f[R]
+\f[B]\f[CB]-k\f[B]\f[R]
 T}@T{
 Use pkill to kill all previous instances of yuzubar and lemonbar
 T}
 T{
-\f[I]\f[BI]-f\f[I]\f[R]
+\f[B]\f[CB]-l\f[B]\f[R] \f[C]cmd\f[R]
 T}@T{
-Specify font for Lemonbar.
-Can be used multiple times to load more than a single font.
+Fork and call \f[C]cmd\f[R] to display the bar.
+Lemonbar-style text will be written to the process\[cq]s stdin
 T}
 .TE
 .SH AUTHOR
